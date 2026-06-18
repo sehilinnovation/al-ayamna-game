@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Al Ayamna — QR Code</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Rajdhani:wght@400;600;700&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #e8e4dc;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: flex-start;
+      font-family: 'Rajdhani', sans-serif;
+      padding: 40px 20px 60px; min-height: 100vh;
+    }
+
+    .print-btn {
+      margin-bottom: 20px; padding: 12px 32px;
+      background: #0e1a4a;
+      color: #c8a840; border: none; border-radius: 10px;
+      font-family: 'Cinzel', serif; font-size: .75rem; font-weight: 700;
+      letter-spacing: .1em; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(14,26,74,.4);
+    }
+
+    .card {
+      position: relative; width: 380px; border-radius: 20px; overflow: hidden;
+      display: flex; flex-direction: column; align-items: center;
+      background: #0e1a4a;
+      box-shadow: 0 8px 40px rgba(10,16,50,.5), 0 2px 8px rgba(0,0,0,.3);
+    }
+
+    /* Navy header block */
+    .header-block {
+      width: 100%; background: linear-gradient(160deg, #0e1a4a 0%, #1a2a6e 100%);
+      display: flex; flex-direction: column; align-items: center;
+      padding: 28px 26px 22px;
+      position: relative;
+      border-bottom: 2px solid rgba(200,168,64,0.3);
+    }
+
+    .logo-border {
+      width: 90px; height: 56px;
+      background: #ffffff;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.3), 0 0 0 2px rgba(200,168,64,0.3);
+      padding: 4px;
+    }
+
+    .logo-img { width: 82px; height: 48px; object-fit: contain; border-radius: 6px; }
+
+    h1 {
+      font-family: 'Cinzel', serif; font-size: 1.55rem; font-weight: 900;
+      letter-spacing: .04em; text-align: center; line-height: 1.2;
+      background: linear-gradient(180deg, #ffffff 0%, #e8cc60 50%, #c8a840 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 5px;
+    }
+
+    .tagline {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: .62rem; color: rgba(255,255,255,0.65);
+      letter-spacing: .22em; text-transform: uppercase; margin-bottom: 8px;
+    }
+
+    /* White body section */
+    .body-block {
+      width: 100%; background: #ffffff;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 20px 24px 0;
+    }
+
+    .scan-label {
+      font-size: .65rem; color: #0e1a4a; letter-spacing: .16em;
+      text-transform: uppercase; margin-bottom: 12px; font-weight: 700;
+    }
+
+    .qr-wrap {
+      background: #fff; border-radius: 14px; padding: 10px;
+      border: 3px solid #0e1a4a;
+      position: relative; margin-bottom: 16px;
+      box-shadow: 0 4px 20px rgba(14,26,74,.15);
+    }
+
+    .prizes-strip {
+      display: flex; gap: 6px; flex-wrap: wrap;
+      justify-content: center; margin-bottom: 16px; width: 100%;
+    }
+
+    .prize-chip {
+      background: #f0f2f8; border: 1px solid rgba(14,26,74,.2);
+      border-radius: 20px; padding: 3px 10px;
+      font-size: .62rem; color: #0e1a4a;
+      font-weight: 700; letter-spacing: .03em; white-space: nowrap;
+    }
+
+    .divider {
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, #c8a840, transparent);
+      opacity: .5; margin-bottom: 14px;
+    }
+
+    /* Navy address block */
+    .address-block {
+      width: 100%; background: linear-gradient(135deg, #0e1a4a, #1a2a6e);
+      padding: 14px 24px 12px;
+      text-align: center;
+      border-top: 1px solid rgba(200,168,64,0.2);
+    }
+
+    .branch-name {
+      font-family: 'Cinzel', serif; font-size: .95rem; font-weight: 700;
+      color: #e8cc60; letter-spacing: .04em; margin-bottom: 4px;
+    }
+
+    .location {
+      font-size: .68rem; color: rgba(255,255,255,.75);
+      letter-spacing: .03em; line-height: 1.6;
+    }
+
+    /* White footer */
+    .footer-strip {
+      width: 100%; background: #ffffff;
+      border-top: 2px solid #c8a840;
+      padding: 8px 24px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .footer-strip .dev { font-size: .58rem; color: #999; letter-spacing: .04em; }
+    .footer-strip .dev span { color: #0e1a4a; font-weight: 800; }
+    .footer-strip .phone { font-size: .62rem; color: #0e1a4a; font-weight: 700; letter-spacing: .04em; }
+    .footer-strip .web  { font-size: .58rem; color: #c8a840; font-weight: 600; letter-spacing: .02em; }
+
+    @page { size: 380px 660px; margin: 0; }
+
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      html { width: 380px !important; height: 660px !important; margin: 0 !important; padding: 0 !important; }
+      body { width: 380px !important; min-height: 660px !important; background: #e8e4dc !important;
+             margin: 0 !important; padding: 0 !important; display: block !important; overflow: visible !important; }
+      .print-btn { display: none !important; }
+      .card { width: 380px !important; border-radius: 0 !important; box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="print-btn" onclick="window.print()">⬇ Download PDF</button>
+
+  <div class="card">
+
+    <!-- NAVY HEADER -->
+    <div class="header-block">
+      <div class="logo-border">
+        <img class="logo-img" src="logo.png" alt="Al Ayamna"
+          onerror="this.parentElement.innerHTML='🕌';" />
+      </div>
+      <h1>Al Ayamna</h1>
+      <div class="tagline">A Taste of Tradition</div>
+      <div style="margin-top:4px; background:rgba(200,168,64,0.15); border:1px solid rgba(200,168,64,0.4); border-radius:20px; padding:3px 14px; font-family:'Rajdhani',sans-serif; font-size:.68rem; font-weight:700; color:#e8cc60; letter-spacing:.1em; text-transform:uppercase;">Restaurant</div>
+    </div>
+
+    <!-- WHITE BODY -->
+    <div class="body-block">
+      <div class="scan-label">⬇ Scan &amp; Win Exciting Prizes ⬇</div>
+
+      <div class="qr-wrap">
+        <div id="qrcode"></div>
+      </div>
+
+      <div class="prizes-strip">
+        <span class="prize-chip">🍛 Free Biryani</span>
+        <span class="prize-chip">🥙 Free Shawarma</span>
+        <span class="prize-chip">🥤 Cold Drink</span>
+        <span class="prize-chip">🍖 Free Kebab</span>
+        <span class="prize-chip">💵 Cash Back</span>
+        <span class="prize-chip">🎁 Combo Deal</span>
+      </div>
+
+      <div class="divider"></div>
+    </div>
+
+    <!-- NAVY ADDRESS -->
+    <div class="address-block">
+      <div class="branch-name">Al Ayamna — Mumbai</div>
+      <div class="location">📍 255, S.V Road, Jogeshwari West<br>Mumbai 400102 &nbsp;|&nbsp; alayamna.com</div>
+    </div>
+
+    <!-- WHITE FOOTER -->
+    <div class="footer-strip">
+      <div class="dev">Developed by <span>SEHIL</span></div>
+      <div class="web">alayamna.com</div>
+    </div>
+
+  </div>
+
+<script>
+  new QRCode(document.getElementById('qrcode'), {
+    text: 'https://sehilinnovation.github.io/al-ayamna-game/',
+    width: 220, height: 220,
+    colorDark: '#0e1a4a', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+</script>
+</body>
+</html>
